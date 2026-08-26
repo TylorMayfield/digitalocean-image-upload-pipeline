@@ -11,8 +11,8 @@ Read the walkthrough: [Build an Image Upload and Optimization Pipeline with Digi
 ## Run locally
 
 1. Create a standard Spaces bucket, enable its CDN, disable file listing, and configure CORS to allow `PUT` plus the `Content-Type` header only from `http://localhost:3000` and your deployed App Platform URL.
-2. Copy `.env.example` to `.env.local`, set all values, then run `npm install`, `npm test`, and `npm run dev`.
-3. For the Function, run `cd functions && npm install && doctl serverless deploy . --remote-build`. Remote build is required because Sharp has native dependencies.
+2. Copy `.env.example` to `.env.local`, set all values, then run `npm ci`, `npm test`, and `npm run dev`.
+3. For the Function, run `cd functions && npm ci && doctl serverless deploy . --remote-build`. Remote build is required because Sharp has native dependencies.
 4. Set the deployed Function URL as `FUNCTION_URL` in the app and use the same long random `FUNCTION_AUTH_TOKEN` in App Platform and the Function environment. Redeploy the app.
 
 ## Deploy on App Platform
