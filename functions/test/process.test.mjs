@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { Readable } from "node:stream";
+import sharp from "sharp";
 import { processAsset } from "../packages/image/process.js";
 
-// A valid 1×1 PNG: it proves Sharp never enlarges a source for 400/800/1600 variants.
-const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/lk4Y2QAAAABJRU5ErkJggg==", "base64");
-
 test("writes three immutable public WebP variants without enlarging the source", async () => {
+  // Generate the smallest valid fixture with the same runtime that processes it.
+  const pixel = await sharp({ create: { width: 1, height: 1, channels: 4, background: "#ffffff" } }).png().toBuffer();
   const calls = [];
   const client = {
     async send(command) {
