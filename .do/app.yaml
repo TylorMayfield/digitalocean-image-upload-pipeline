@@ -1,0 +1,21 @@
+name: image-upload-pipeline
+region: nyc
+services:
+  - name: web
+    github:
+      repo: REPLACE_WITH_YOUR_GITHUB_REPOSITORY
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    build_command: npm run build
+    run_command: npm run start
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: basic-xxs
+functions:
+  - name: image-functions
+    github:
+      repo: REPLACE_WITH_YOUR_GITHUB_REPOSITORY
+      branch: main
+      deploy_on_push: true
+    source_dir: /functions
