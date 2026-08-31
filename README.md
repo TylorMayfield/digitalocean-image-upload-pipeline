@@ -2,9 +2,13 @@
 
 This is the companion to the tutorial. It stores originals at `uploads/<uuid>/original` with a private ACL and creates public `images/<uuid>/{400,800,1600}.webp` variants that the Spaces CDN can cache.
 
-Read the walkthrough: [Build an Image Upload and Optimization Pipeline with DigitalOcean](https://www.tylor.nz/content/build-image-upload-optimization-pipeline)
+## Read the guide
 
-> Disclosure: This README includes a DigitalOcean affiliate link. If you use it, I may earn a commission at no additional cost to you.
+[Build an Image Upload and Optimization Pipeline with DigitalOcean](https://www.tylor.nz/content/build-image-upload-optimization-pipeline)
+
+## Disclosure
+
+This README includes a DigitalOcean affiliate link. If you use it, I may earn a commission at no additional cost to you.
 
 [Deploy the starter on DigitalOcean App Platform](https://www.awin1.com/cread.php?s=4757508&v=123996&q=601070&r=3054551)
 
