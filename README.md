@@ -4,13 +4,13 @@ This is the companion to the tutorial. It stores originals at `uploads/<uuid>/or
 
 ## Read the guide
 
-[Build an Image Upload and Optimization Pipeline with DigitalOcean](https://www.tylor.nz/content/build-image-upload-optimization-pipeline)
+[Build an Image Upload and Optimization Pipeline with DigitalOcean](https://www.tylor.nz/content/build-image-upload-optimization-pipeline?utm_source=github&utm_medium=referral&utm_campaign=digitalocean-guides&utm_content=companion-readme)
 
 ## Disclosure
 
 This README includes a DigitalOcean affiliate link. If you use it, I may earn a commission at no additional cost to you.
 
-[Deploy the starter on DigitalOcean App Platform](https://www.awin1.com/cread.php?s=4757508&v=123996&q=601070&r=3054551)
+[Deploy the starter on DigitalOcean App Platform](https://www.tylor.nz/go/digitalocean?utm_source=github&utm_medium=affiliate&utm_campaign=digitalocean-guides&utm_content=build-image-upload-optimization-pipeline&product=app-platform&placement=companion-readme&variant=readme-primary&locale=en)
 
 ## Run locally
 
