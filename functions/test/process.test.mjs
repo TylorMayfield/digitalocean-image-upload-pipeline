@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { Readable } from "node:stream";
 import sharp from "sharp";
-import { processAsset } from "../packages/image/process.js";
+import { processAsset } from "../packages/image/process/index.js";
 
 test("writes three immutable public WebP variants without enlarging the source", async () => {
   // Generate the smallest valid fixture with the same runtime that processes it.

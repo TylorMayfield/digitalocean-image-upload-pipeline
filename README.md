@@ -1,41 +1,52 @@
-# DigitalOcean image upload pipeline
+# Image upload pipeline
 
-This is the companion to the tutorial. It stores originals at `uploads/<uuid>/original` with a private ACL and creates public `images/<uuid>/{400,800,1600}.webp` variants that the Spaces CDN can cache.
+A Next.js API signs uploads into private Spaces objects. A secured Function reads each original and writes public 400, 800, and 1600 pixel WebP variants. The browser receives upload and image URLs. Storage credentials and the Function token stay on the server.
 
 ## Read the guide
 
-[Build an Image Upload and Optimization Pipeline with DigitalOcean](https://www.tylor.nz/content/build-image-upload-optimization-pipeline?utm_source=github&utm_medium=referral&utm_campaign=digitalocean-guides&utm_content=companion-readme)
+Follow the [image upload guide](https://www.tylor.nz/content/build-image-upload-optimization-pipeline) for the storage permissions, deployment steps, and one-image acceptance test.
 
 ## Disclosure
 
-This README includes a DigitalOcean affiliate link. If you use it, I may earn a commission at no additional cost to you.
+I am a DigitalOcean affiliate. If you use the affiliate link below, I may earn a commission at no additional cost to you.
 
-[Deploy the starter on DigitalOcean App Platform](https://www.tylor.nz/go/digitalocean?utm_source=github&utm_medium=affiliate&utm_campaign=digitalocean-guides&utm_content=build-image-upload-optimization-pipeline&product=app-platform&placement=companion-readme&variant=readme-primary&locale=en)
+[Visit DigitalOcean](https://www.tylor.nz/go/digitalocean?utm_source=github&utm_medium=affiliate&utm_campaign=digitalocean-guides&utm_content=build-image-upload-optimization-pipeline&product=app-platform&placement=companion-readme). Sign in or create an account, then open App Platform to deploy your copy of this repository.
 
-## Run locally
+## Prepare storage
 
-1. Create a standard Spaces bucket, enable its CDN, disable file listing, and configure CORS to allow `PUT` plus the `Content-Type` header only from `http://localhost:3000` and your deployed App Platform URL.
-2. Copy `.env.example` to `.env.local`, set all values, then run `npm ci`, `npm test`, and `npm run dev`.
-3. For the Function, run `cd functions && npm ci && doctl serverless deploy . --remote-build`. Remote build is required because Sharp has native dependencies.
-4. Set the deployed Function URL as `FUNCTION_URL` in the app and use the same long random `FUNCTION_AUTH_TOKEN` in App Platform and the Function environment. Redeploy the app.
+Create a standard Spaces bucket and enable its CDN. Disable file listing and keep originals private. Configure CORS to allow `PUT` and `Content-Type` from your deployed web origin. Add `http://localhost:3000` only if you use the optional local web app.
 
-## Deploy on App Platform
+Choose one non-sensitive JPEG, PNG, or WebP below 10 MB for the first test. This starter needs authentication, quotas, and abuse controls before you accept public uploads.
 
-Push this directory as a repository, replace the GitHub repository placeholder in `.do/app.yaml`, and create an App Platform app from it. Add every `.env.example` value as an encrypted runtime variable to the appropriate component. Add the Spaces values to both the web service and Function component; add `FUNCTION_URL` and `FUNCTION_AUTH_TOKEN` to the web service; add `FUNCTION_AUTH_TOKEN` to the Function component.
+## Deploy both components on App Platform
 
-The Function action is web-secured. Only the server-side `/api/images/:assetId/process` route supplies `X-Require-Whisk-Auth`; do not call it from the browser.
+This is the primary deployment path. It uses GitHub and the App Platform dashboard, without doctl or a separate Functions namespace.
 
-## Deployment preflight
+1. Copy this starter to your own GitHub repository. Replace both `REPLACE_WITH_YOUR_GITHUB_REPOSITORY` entries in `.do/app.yaml` with your `owner/repository`, then commit the file.
+2. Create an App Platform app from the repository. Review the spec before deployment. It must include `web` with source `/` and `image-functions` with source `/functions`. Add the Functions component from the same repository if it was not detected.
+3. Add the variables below as encrypted variables on the specified components. Never commit their values. Leave `FUNCTION_URL` unset for the first deployment. The web page can start, but processing is unavailable until you set it.
+4. Deploy both components. App Platform builds the Function remotely, including Sharp's native dependencies. Check the Function build logs before continuing.
+5. Copy the web URL for `image/process` from the Functions component. Set it as `FUNCTION_URL` on `web`, then redeploy the web service.
+6. Add the deployed web origin to the bucket's CORS rule and perform the acceptance test below.
 
-Before creating the App Platform app, confirm that `.do/app.yaml` still points to the repository you intend to deploy and that the service uses `/` while the Functions component uses `/functions`. Keep every value in `.env.example` out of Git: add it as an encrypted runtime variable in the App Platform dashboard instead.
+| Variable | Web service | Functions component |
+| --- | --- | --- |
+| `SPACES_BUCKET`, `SPACES_REGION` | Set | Set |
+| `SPACES_KEY`, `SPACES_SECRET` | Set as secrets | Set as secrets |
+| `SPACES_CDN_BASE_URL` | Set | Set |
+| `FUNCTION_AUTH_TOKEN` | Same long random secret | Same long random secret |
+| `FUNCTION_URL` | Set after Function deployment | Not needed |
 
-Deploy in this order:
+The action requires `X-Require-Whisk-Auth`. Only the server-side processing route supplies this header. Do not expose the token or call the Function from the browser.
 
-1. Run `npm test` from this directory to verify the uploader contract and object-key behavior locally.
-2. Deploy the Function with `doctl serverless deploy . --remote-build` from `functions/`, then copy its deployed URL into `FUNCTION_URL` for the web service. The Function uses Sharp and must be verified in that remote runtime rather than a mismatched local native build.
-3. Deploy the App Platform service and upload one disposable image.
-4. Confirm the original is not publicly reachable, each 400/800/1600 WebP variant loads through the CDN in a private browser window, and a missing or incorrect Function token fails closed.
+See [DigitalOcean's App Platform Functions deployment instructions](https://docs.digitalocean.com/products/functions/how-to/deploy-to-app-platform/). `doctl serverless deploy` deploys into a connected standalone namespace and is a different workflow.
+
+## Optional local web app
+
+First deploy the Functions component using the steps above. Copy `.env.example` to `.env.local` and set its variables, including that deployed Function URL and token. From the repository root, run `npm ci`, `npm test`, then `npm run dev`. Local web requests use the deployed Function and can incur charges. This does not emulate Functions locally.
 
 ## Verify before expanding
 
-Upload one image, verify that the `uploads/` object cannot be opened anonymously, then open each returned CDN variant in a private browser window. Reject unsupported files and files larger than 10 MB. Add authentication, rate limiting, malware scanning, deletion, and durable queueing before using this for public user uploads.
+Upload one image. Confirm that the original under `uploads/` cannot be opened anonymously, while each generated WebP URL under `images/` loads through the CDN in a private browser window. Confirm a missing or incorrect Function token fails closed. Check unsupported-file and 10 MB limits. Delete the disposable objects after testing.
+
+These checks cover this starter's upload path. Add account authorization, rate limits, content scanning, deletion, and a durable queue where required before using it for public uploads.
