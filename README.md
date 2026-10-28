@@ -4,13 +4,13 @@ A Next.js API signs uploads into private Spaces objects. A secured Function read
 
 ## Read the guide
 
-Follow the [image upload guide](https://www.tylor.nz/content/build-image-upload-optimization-pipeline) for the storage permissions, deployment steps, and one-image acceptance test.
+Follow the [image upload guide](https://www.tylor.nz/content/build-image-upload-optimization-pipeline?utm_source=github&utm_medium=referral&utm_campaign=digitalocean-guides&utm_content=companion-readme) for the storage permissions, deployment steps, and one-image acceptance test.
 
 ## Disclosure
 
 I am a DigitalOcean affiliate. If you use the affiliate link below, I may earn a commission at no additional cost to you.
 
-[Visit DigitalOcean](https://www.tylor.nz/go/digitalocean?utm_source=github&utm_medium=affiliate&utm_campaign=digitalocean-guides&utm_content=build-image-upload-optimization-pipeline&product=app-platform&placement=companion-readme). Sign in or create an account, then open App Platform to deploy your copy of this repository.
+[Review App Platform for the web app and image Function](https://www.tylor.nz/go/digitalocean?utm_source=github&utm_medium=affiliate&utm_campaign=digitalocean-guides&utm_content=build-image-upload-optimization-pipeline&product=app-platform&placement=companion-readme). Review App Platform, Functions and Spaces charges before deploying your copy. This example uses all three services.
 
 ## Prepare storage
 
